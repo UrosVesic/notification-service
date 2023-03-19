@@ -14,6 +14,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import rs.urosvesic.notificationservice.urls.Urls;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,11 +31,13 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        String[] hasAnyAuthorityEndpoints={Urls.GET_ALL_NOTIFICATIONS_FOR_USER,Urls.READ_NOTIFICATION,Urls.SAVE_NOTIFICATION};
+
         http.cors().and()
                 .csrf().disable()
                 .authorizeHttpRequests()
-                .antMatchers("/actuator/**")
-                .hasAuthority("user")
+                .antMatchers(hasAnyAuthorityEndpoints)
+                .hasAnyAuthority("user","admin")
                 .anyRequest()
                 .authenticated().and()
                 .oauth2ResourceServer().jwt().jwtAuthenticationConverter(jwtConverter());

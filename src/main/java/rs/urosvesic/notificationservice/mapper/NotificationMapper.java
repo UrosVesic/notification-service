@@ -4,7 +4,6 @@ import org.springframework.stereotype.Component;
 import rs.urosvesic.notificationservice.dto.NotificationDto;
 import rs.urosvesic.notificationservice.model.Notification;
 import rs.urosvesic.notificationservice.model.NotificationType;
-import rs.urosvesic.notificationservice.util.UserUtil;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -15,18 +14,19 @@ public class NotificationMapper implements GenericMapper<NotificationDto, Notifi
         return Notification
                 .builder()
                 .id(UUID.randomUUID().toString())
-                .sender(UserUtil.getCurrentUsername())
+                .sender(dto.getSender())
                 .receiver(dto.getReceiver())
                 .postId(dto.getPostId())
                 .read(false)
                 .notificationType(dto.getNotificationType())
-                .created_at(LocalDateTime.now())
+                .createdAt(LocalDateTime.now())
                 .build();
     }
 
     @Override
     public NotificationDto toDto(Notification entity) {
-        return NotificationDto.builder()
+        NotificationDto build = NotificationDto.builder()
+                .id(entity.getId())
                 .notificationType(entity.getNotificationType())
                 .read(entity.isRead())
                 .postId(entity.getPostId())
@@ -38,6 +38,7 @@ public class NotificationMapper implements GenericMapper<NotificationDto, Notifi
                         + " "
                         + "your post")
                 .build();
+        return build;
     }
 
     private String convertToString(NotificationType notificationType) {

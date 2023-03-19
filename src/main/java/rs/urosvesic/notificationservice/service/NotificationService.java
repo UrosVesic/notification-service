@@ -10,6 +10,7 @@ import rs.urosvesic.notificationservice.repository.CustomNotificationRepository;
 import rs.urosvesic.notificationservice.repository.NotificationRepository;
 import rs.urosvesic.notificationservice.util.UserUtil;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,14 +25,14 @@ public class NotificationService {
     @Transactional
     public void saveNotification(NotificationDto notificationDto) {
         Notification notification = notificationMapper.toEntity(notificationDto);
-        notificationRepository.save(notification);
-        websocketService.notifyUser(notificationDto, UserUtil.getToken());
+        Notification saved = notificationRepository.save(notification);
+        websocketService.notifyUser(notificationMapper.toDto(saved));
     }
 
 
     public void readNotification(String id) {
         Notification chat = notificationRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Chat not found"));
+                .orElseThrow(() -> new RuntimeException("Notification with id "+ id + " not found"));
         if(!chat.getReceiver().equals(UserUtil.getCurrentUsername())){
             throw new RuntimeException("You are not receiver of this notification");
         }
@@ -39,9 +40,11 @@ public class NotificationService {
     }
 
     public List<NotificationDto> getAllNotificationsForUser() {
-        return notificationRepository.findByReceiver(UserUtil.getCurrentUsername())
+        List<NotificationDto> collect = notificationRepository.findByReceiver(UserUtil.getCurrentUsername())
                 .stream()
                 .map(notificationMapper::toDto)
                 .collect(Collectors.toList());
+        Collections.reverse(collect);
+        return collect;
     }
 }

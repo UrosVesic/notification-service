@@ -20,6 +20,6 @@ public class Notification implements MyCollection{
     private String receiver;
     private Long postId;
     private boolean read;
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
     private NotificationType notificationType;
 }

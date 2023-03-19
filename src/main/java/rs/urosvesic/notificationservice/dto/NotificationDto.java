@@ -12,6 +12,7 @@ import rs.urosvesic.notificationservice.model.NotificationType;
 @NoArgsConstructor
 public class NotificationDto implements Dto{
 
+    private String id;
     private Long postId;
     private String sender;
     private String receiver;

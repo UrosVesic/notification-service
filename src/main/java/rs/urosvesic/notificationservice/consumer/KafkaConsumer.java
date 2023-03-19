@@ -3,7 +3,7 @@ package rs.urosvesic.notificationservice.consumer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-//import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import rs.urosvesic.notificationservice.dto.NotificationDto;
 import rs.urosvesic.notificationservice.service.NotificationService;
@@ -15,7 +15,7 @@ public class KafkaConsumer {
     private final NotificationService notificationService;
 
 
-    //@KafkaListener(topics = "${consumer.topic.name}",groupId = "notification-consumer")
+    @KafkaListener(topics = "${consumer.topic.name}",groupId = "notification-consumer")
     public void listenOnMessageTopic(String receivedNotification){
         try {
             System.out.println("Received message");
